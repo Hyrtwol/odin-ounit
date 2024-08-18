@@ -15,12 +15,10 @@ should_be_x :: "0x%8X (should be: 0x%8X)"
 @(private)
 should_be_x16 :: "0x%16X (should be: 0x%16X)"
 
-@(private)
 expect_u32 :: proc(t: ^testing.T, act, exp: u32, loc := #caller_location) {
 	expectf(t, act == exp, should_be_x, act, exp, loc = loc)
 }
 
-@(private)
 expect_i32 :: proc(t: ^testing.T, act, exp: i32, loc := #caller_location) {
 	expectf(t, act == exp, should_be_x, act, exp, loc = loc)
 }

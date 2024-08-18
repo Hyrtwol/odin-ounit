@@ -24,10 +24,10 @@ expect_i32 :: proc(t: ^testing.T, act, exp: i32, loc := #caller_location) {
 }
 
 //@(deprecated="Use expect_i32 or expect_u32")
-expect_it :: proc {
-	expect_u32,
-	expect_i32,
-}
+// expect_it :: proc {
+// 	expect_u32,
+// 	expect_i32,
+// }
 
 // public static void Equal<T>(T expected, T actual)
 expect_equal :: proc(t: ^testing.T, #any_int act: int, #any_int exp: int, loc := #caller_location) {
@@ -62,14 +62,19 @@ expect_valuef :: proc(t: ^testing.T, act, exp, delta: f32, loc := #caller_locati
 expect_value_u8 :: proc(t: ^testing.T, act, exp: u8, loc := #caller_location) {
 	expectf(t, act == exp, should_be_b, act, exp, loc = loc)
 }
+
+expect_value_uintptr :: proc(t: ^testing.T, act: uintptr, exp: int, loc := #caller_location) {
+	expectf(t, act == uintptr(exp), should_be_x, act, uintptr(exp), loc = loc)
+}
+
 expect_value_str :: proc(t: ^testing.T, act, exp: string, loc := #caller_location) {
 	expectf(t, act == exp, should_be_d, act, exp, loc = loc)
 }
 
-_expect_value :: proc {
-	expect_value_int,
-	expect_valuei,
-	expect_valuef,
-	expect_value_u8,
-	expect_value_str,
-}
+// _expect_value :: proc {
+// 	expect_value_int,
+// 	expect_valuei,
+// 	expect_valuef,
+// 	expect_value_u8,
+// 	expect_value_str,
+// }

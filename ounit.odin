@@ -1,7 +1,9 @@
 package ounit
 
+import "base:intrinsics"
 import "core:testing"
 
+T :: testing.T
 expectf :: testing.expectf
 
 @(private)
@@ -11,32 +13,38 @@ should_be_f :: "%f (should be: %f)"
 @(private)
 should_be_b :: "0b%8b (should be: 0b%8b)"
 @(private)
-should_be_x :: "0x%8X (should be: 0x%8X)"
+should_be_x2 :: "0x%2X (should be: 0x%2X)"
+@(private)
+should_be_x4 :: "0x%4X (should be: 0x%4X)"
+@(private)
+should_be_x8 :: "0x%8X (should be: 0x%8X)"
 @(private)
 should_be_x16 :: "0x%16X (should be: 0x%16X)"
+@(private)
+should_be_size_of :: "size_of(%v)=" + should_be_d
 
 expect_u32 :: proc(t: ^testing.T, act, exp: u32, loc := #caller_location) {
-	expectf(t, act == exp, should_be_x, act, exp, loc = loc)
+	expectf(t, act == exp, should_be_x8, act, exp, loc = loc)
 }
 
 expect_i32 :: proc(t: ^testing.T, act, exp: i32, loc := #caller_location) {
-	expectf(t, act == exp, should_be_x, act, exp, loc = loc)
+	expectf(t, act == exp, should_be_x8, act, exp, loc = loc)
 }
 
 expect_equal :: proc(t: ^testing.T, #any_int act: int, #any_int exp: int, loc := #caller_location) {
-	expectf(t, act == exp, should_be_x, act, exp, loc = loc)
+	expectf(t, act == exp, should_be_x8, act, exp, loc = loc)
 }
 
 expect_size :: proc(t: ^testing.T, $act: typeid, exp: int, loc := #caller_location) {
-	expectf(t, size_of(act) == exp, "size_of(%v)=" + should_be_d, typeid_of(act), size_of(act), exp, loc = loc)
+	expectf(t, size_of(act) == exp, should_be_size_of, typeid_of(act), size_of(act), exp, loc = loc)
 }
 
 expect_value :: proc(t: ^testing.T, #any_int act: u32, #any_int exp: u32, loc := #caller_location) {
-	expectf(t, act == exp, should_be_x, act, exp, loc = loc)
+	expectf(t, act == exp, should_be_x8, act, exp, loc = loc)
 }
 
 expect_value_64 :: proc(t: ^testing.T, #any_int act: u64, #any_int exp: u64, loc := #caller_location) {
-	expectf(t, act == exp, should_be_x, act, exp, loc = loc)
+	expectf(t, act == exp, should_be_x16, act, exp, loc = loc)
 }
 
 expect_valuei :: proc(t: ^testing.T, act, exp: i32, loc := #caller_location) {
@@ -56,18 +64,23 @@ expect_value_u8 :: proc(t: ^testing.T, act, exp: u8, loc := #caller_location) {
 }
 
 expect_value_uintptr :: proc(t: ^testing.T, act: uintptr, exp: int, loc := #caller_location) {
-	expectf(t, act == uintptr(exp), should_be_x, act, uintptr(exp), loc = loc)
+	expectf(t, act == uintptr(exp), should_be_x8, act, uintptr(exp), loc = loc)
 }
 
 expect_value_str :: proc(t: ^testing.T, act, exp: string, loc := #caller_location) {
 	expectf(t, act == exp, should_be_d, act, exp, loc = loc)
 }
 
-@(private)
 expect_flags :: proc(t: ^testing.T, bs: $T, #any_int exp: uint, loc := #caller_location) where intrinsics.type_is_bit_set(T) {
-	when size_of(T) == 4 {
+	when size_of(T) == 1 {
+		act: u8 = transmute(u8)transmute(T)bs
+		expectf(t, act == u8(exp), should_be_x8, act, u8(exp), loc = loc)
+	} else when size_of(T) == 2 {
+		act: u16 = transmute(u16)transmute(T)bs
+		expectf(t, act == u16(exp), should_be_x8, act, u32(exp), loc = loc)
+	} else when size_of(T) == 4 {
 		act: u32 = transmute(u32)transmute(T)bs
-		expectf(t, act == u32(exp), should_be_x, act, u32(exp), loc = loc)
+		expectf(t, act == u32(exp), should_be_x8, act, u32(exp), loc = loc)
 	} else when size_of(T) == 8 {
 		act: u64 = transmute(u64)transmute(T)bs
 		expectf(t, act == u64(exp), should_be_x16, act, u64(exp), loc = loc)

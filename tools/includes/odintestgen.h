@@ -42,12 +42,12 @@ static std::string ConvertLPCWSTRToString(const LPCWSTR lpcwszStr)
 	<< '\t' << "expect_value(t, u32(sut." << #s << "), " \
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << (ULONG)(ULONG_PTR)(s) << ")" << endl
 
-#define expect_value_64(s) out \
-	<< '\t' << "expect_value_64(t, u64(sut." << #s << "), " \
+#define expect_any_int(s) out \
+	<< '\t' << "expect_any_int(t, u64(sut." << #s << "), " \
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << s << ")" << endl
 
 #define expect_value_uintptr(s) out \
-	<< '\t' << "expect_value_64(t, uintptr(sut." << #s << "), " \
+	<< '\t' << "expect_any_int(t, uintptr(sut." << #s << "), " \
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << (ULONG_PTR)(s) << ")" << endl
 
 #define expect_value_str(s) out \

@@ -3,5 +3,5 @@
 Unit test helpers for Odin
 
 ```bat
-git submodule add git@github.com:Hyrtwol/odin-ounit.git shared/ounit
+git submodule add git@github.com:Hyrtwol/odin-ounit.git ounit
 ```

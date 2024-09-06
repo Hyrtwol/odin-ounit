@@ -6,6 +6,9 @@ import "core:math"
 import "core:reflect"
 import "core:testing"
 
+_ :: log // TODO remove
+_ :: reflect // TODO remove
+
 EPSILON :: math.F32_EPSILON
 T :: testing.T
 expectf :: testing.expectf

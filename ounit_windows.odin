@@ -1,4 +1,4 @@
-//+build windows
+#+build windows
 package ounit
 
 import "base:runtime"

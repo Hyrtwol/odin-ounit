@@ -16,6 +16,13 @@ static std::string ConvertLPCWSTRToString(const LPCWSTR lpcwszStr)
 	return std::string(str);
 }
 
+#if !defined(sut)
+#define sut "sut"
+#endif
+#if !defined(trim_count)
+#define trim_count 5
+#endif
+
 #define test_proc_begin() out \
 	<< endl \
 	<< "@(test)" << endl \
@@ -31,19 +38,23 @@ static std::string ConvertLPCWSTRToString(const LPCWSTR lpcwszStr)
 	<< '\t' << "// " << comment << endl
 
 #define expect_size(s) out \
-	<< '\t' << "expect_size(t, sut." << #s << ", " \
+	<< '\t' << "expect_size(t, " << sut << "." << #s << ", " \
 	<< std::dec << sizeof(s) << ")" << endl
 
 #define expect_value(s) out \
-	<< '\t' << "expect_value(t, sut." << #s << ", " \
+	<< '\t' << "expect_value(t, " << sut << "." << #s << ", " \
+	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << s << ")" << endl
+
+#define expect_value_trim(s) out \
+	<< '\t' << "expect_value(t, " << sut << "." << std::string(#s).substr(trim_count) << ", " \
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << s << ")" << endl
 
 #define expect_value_32(s) out \
-	<< '\t' << "expect_value(t, u32(sut." << #s << "), " \
+	<< '\t' << "expect_value(t, u32(" << sut << "." << #s << "), " \
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << (ULONG)(ULONG_PTR)(s) << ")" << endl
 
 #define expect_any_int(s) out \
-	<< '\t' << "expect_any_int(t, u64(sut." << #s << "), " \
+	<< '\t' << "expect_any_int(t, u64(" << sut << "." << #s << "), " \
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << s << ")" << endl
 
 #define expect_value_uintptr(s) out \
@@ -51,22 +62,22 @@ static std::string ConvertLPCWSTRToString(const LPCWSTR lpcwszStr)
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << (ULONG_PTR)(s) << ")" << endl
 
 #define expect_value_str(s) out \
-	<< '\t' << "expect_value_str(t, sut." << #s << ", L(\"" << ConvertLPCWSTRToString(s) << "\"))" << endl
+	<< '\t' << "expect_value_str(t, " << sut << "." << #s << ", L(\"" << ConvertLPCWSTRToString(s) << "\"))" << endl
 
 #define expect_value_enum(e, s) out \
-	<< '\t' << "expect_value(t, sut." << e << "." << #s << ", " \
+	<< '\t' << "expect_value(t, " << sut << "." << e << "." << #s << ", " \
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << s << ")" << endl
 
 #define expect_value_enum_remap(e, v, s) out \
-	<< '\t' << "expect_value(t, sut." << e << "." << v << ", " \
+	<< '\t' << "expect_value(t, " << sut << "." << e << "." << v << ", " \
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << s << ")" << endl
 
 #define expect_flags(e, v, s) out \
-	<< '\t' << "expect_flags(t, sut." << e << "{." << v << "}, " \
+	<< '\t' << "expect_flags(t, " << sut << "." << e << "{." << v << "}, " \
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << s << ")" << endl
 
 #define expect_value_str(s) out \
-	<< '\t' << "expect_value_str(t, sut." << #s << ", L(\"" << ConvertLPCWSTRToString(s) << "\"))" << endl
+	<< '\t' << "expect_value_str(t, " << sut << "." << #s << ", L(\"" << ConvertLPCWSTRToString(s) << "\"))" << endl
 
 #define package_header() out \
     << "#+build windows" << endl \

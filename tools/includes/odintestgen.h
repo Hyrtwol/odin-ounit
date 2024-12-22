@@ -41,6 +41,10 @@ static std::string ConvertLPCWSTRToString(const LPCWSTR lpcwszStr)
 	<< '\t' << "expect_size(t, " << sut << "." << #s << ", " \
 	<< std::dec << sizeof(s) << ")" << endl
 
+#define expect_size_trim(s) out \
+	<< '\t' << "expect_size(t, " << sut << "." << std::string(#s).substr(trim_count) << ", " \
+	<< std::dec << sizeof(s) << ")" << endl
+
 #define expect_value(s) out \
 	<< '\t' << "expect_value(t, " << sut << "." << #s << ", " \
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << s << ")" << endl

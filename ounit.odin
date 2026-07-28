@@ -95,6 +95,24 @@ expect_flags :: proc(t: ^testing.T, bs: $T, #any_int exp: uint, loc := #caller_l
 	}
 }
 
+expect_enum :: proc(t: ^testing.T, bs: $T, #any_int exp: uint, loc := #caller_location) where intrinsics.type_is_enum(T) {
+	when size_of(T) == 1 {
+		act: u8 = transmute(u8)transmute(T)bs
+		expectf(t, act == u8(exp), should_be_x8, act, u8(exp), loc = loc)
+	} else when size_of(T) == 2 {
+		act: u16 = transmute(u16)transmute(T)bs
+		expectf(t, act == u16(exp), should_be_x8, act, u32(exp), loc = loc)
+	} else when size_of(T) == 4 {
+		act: u32 = transmute(u32)transmute(T)bs
+		expectf(t, act == u32(exp), should_be_x8, act, u32(exp), loc = loc)
+	} else when size_of(T) == 8 {
+		act: u64 = transmute(u64)transmute(T)bs
+		expectf(t, act == u64(exp), should_be_x16, act, u64(exp), loc = loc)
+	} else {
+		#panic("Unhandled expect_flags bit_set size")
+	}
+}
+
 expect_scalar :: proc(t: ^T, value, expected: $T, loc := #caller_location) -> bool where intrinsics.type_is_comparable(T) {
 	when intrinsics.type_is_float(T) {
 		format: string = should_be_f

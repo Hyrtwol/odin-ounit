@@ -9,10 +9,12 @@ import "core:testing"
 _ :: log // TODO remove
 _ :: reflect // TODO remove
 
-EPSILON :: math.F32_EPSILON
 T :: testing.T
+expect :: testing.expect
 expectf :: testing.expectf
 expect_value :: testing.expect_value
+
+EPSILON :: math.F32_EPSILON
 
 should_be_v :: "%v (should be: %v)"
 should_be_d :: "%d (should be: %d)"

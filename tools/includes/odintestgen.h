@@ -5,13 +5,18 @@
 #include <filesystem>
 #include <map>
 
-using namespace std;
+#define endl std::endl
+#define cout std::cout
+#define ofstream std::ofstream
+#define endl std::endl
+
+// using namespace std;
 using namespace std::filesystem;
 
 static std::string ConvertLPCWSTRToString(const LPCWSTR lpcwszStr)
 {
 	int strLength = WideCharToMultiByte(CP_UTF8, 0, lpcwszStr, -1, nullptr, 0, nullptr, nullptr) - 1;
-	string str(strLength, 0);
+    std::string str(strLength, 0);
 	WideCharToMultiByte(CP_UTF8, 0, lpcwszStr, -1, &str[0], strLength, nullptr, nullptr);
 	return std::string(str);
 }
@@ -58,18 +63,25 @@ static std::string ConvertLPCWSTRToString(const LPCWSTR lpcwszStr)
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << (ULONG)(ULONG_PTR)(s) << ")" << endl
 
 #define expect_any_int(s) out \
-	<< '\t' << "expect_any_int(t, u64(" << sut << "." << #s << "), " \
-	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << s << ")" << endl
+	<< '\t' << "expect_value(t, " << sut << "." << #s << ", " \
+	<< std::dec << s << ")" << endl
+
+#define expect_float(s, delta) out \
+	<< '\t' << "expect_float(t, " << sut << "." << #s << ", " \
+	<< std::defaultfloat << s << ", " << delta <<  ")" << endl
 
 #define expect_value_uintptr(s) out \
 	<< '\t' << "expect_any_int(t, uintptr(sut." << #s << "), " \
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << (ULONG_PTR)(s) << ")" << endl
 
-#define expect_value_str(s) out \
+#define expect_value_str_w(s) out \
 	<< '\t' << "expect_value_str(t, " << sut << "." << #s << ", L(\"" << ConvertLPCWSTRToString(s) << "\"))" << endl
 
+#define expect_value_str(s) out \
+	<< '\t' << "expect_value(t, " << sut << "." << #s << ", \"" << s << "\")" << endl
+
 #define expect_value_enum(e, s) out \
-	<< '\t' << "expect_value(t, " << sut << "." << e << "." << #s << ", " \
+	<< '\t' << "expect_value(t, u32(" << sut << "." << e << "." << #s << "), " \
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << s << ")" << endl
 
 #define expect_value_enum_remap(e, v, s) out \
@@ -79,9 +91,6 @@ static std::string ConvertLPCWSTRToString(const LPCWSTR lpcwszStr)
 #define expect_flags(e, v, s) out \
 	<< '\t' << "expect_flags(t, " << sut << "." << e << "{." << v << "}, " \
 	<< "0x" << std::uppercase << std::setfill('0') << std::setw(8) << std::hex << s << ")" << endl
-
-#define expect_value_str(s) out \
-	<< '\t' << "expect_value_str(t, " << sut << "." << #s << ", L(\"" << ConvertLPCWSTRToString(s) << "\"))" << endl
 
 #define package_header() out \
     << "#+build windows" << endl \
